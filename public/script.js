@@ -23,6 +23,21 @@ function getTodosAJAX() {
 
 }
 
+function completeTodoAJAX(id) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", "/api/todos/"+id, true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    var data = "id=" + encodeURI(id);
+    xhr.onreadystatechange = function () {
+        if(xhr.readyState == RESPONSE_DONE){    //response ready?
+            if(xhr.status == STATUS_OK){
+                addTodoElements(TODO_LIST_ID, xhr.responseText);
+            }
+        }
+    };
+    xhr.send(data);
+}
 function addTodoAJAX() {
     var title= document.getElementById("new_todo_title").value;
     var xhr = new XMLHttpRequest();
@@ -40,7 +55,7 @@ function addTodoAJAX() {
                 addTodoElements(TODO_LIST_ID, xhr.responseText);
             }
         }
-    }
+    };
     xhr.send(data);
 
 }
@@ -53,14 +68,24 @@ function addTodoElements(id, todos_data_json){
         Object.keys(todos).forEach( function (key) {
             var todoElement = createTodoElement(key, todos[key]);
             parent.appendChild(todoElement);
-            console.log(todoElement);
+            //console.log(todoElement);
         });
     }
 }
+
 
 function createTodoElement(id, todo_object) {
     var todo_element = document.createElement('div');
     todo_element.innerText = todo_object.title;
     todo_element.setAttribute("data-id", id);
+    todo_element.setAttribute("class", "todoStatus" +todo_object.status);
+
+    if(todo_object.status == "ACTIVE"){
+        var complete_button = document.createElement("button");
+        complete_button.innerText = "Mark Complete";
+        complete_button.setAttribute("onclick", "completeTodoAJAX(" + id +")");
+        todo_element.appendChild(complete_button);
+    }
+
     return todo_element;
 }

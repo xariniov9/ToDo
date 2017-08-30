@@ -45,8 +45,6 @@ app.post('/api/todos', function (req, res) {
 
 app.put('/api/todos/:id', function (req, res) {
     var put_id = req.params.id;
-    var todo_title = req.body.title;
-    var todo_status = req.body.status;
 
     var todo = todo_db.todos[put_id];
     if(!todo || todo.status == todo_db.StatusENUMS.DELETED){

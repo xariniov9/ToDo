@@ -7,7 +7,7 @@ var StatusENUMS = {
 var todos = {
     1 : {title : "learn JavaSciprt", status : StatusENUMS.ACTIVE},
     2 : {title : "GIT Tutorial", status : StatusENUMS.ACTIVE},
-    3 : {title : "learn Z", status : StatusENUMS.ACTIVE},
+    3 : {title : "learn Z", status : StatusENUMS.DELETED},
 
 }
 
