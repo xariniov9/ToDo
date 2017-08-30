@@ -38,6 +38,25 @@ function completeTodoAJAX(id) {
     };
     xhr.send(data);
 }
+
+function deleteTodoAJAX(id) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("DELETE", "/api/todos/"+id, true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    var data = "id=" + encodeURI(id);
+    xhr.onreadystatechange = function () {
+        if(xhr.readyState == RESPONSE_DONE){    //response ready?
+            if(xhr.status == STATUS_OK){
+                addTodoElements(TODO_LIST_ID, xhr.responseText);
+            }
+        }
+    };
+    xhr.send(data);
+}
+
+
+
 function addTodoAJAX() {
     var title= document.getElementById("new_todo_title").value;
     var xhr = new XMLHttpRequest();
@@ -73,12 +92,12 @@ function addTodoElements(id, todos_data_json){
     }
 }
 
-
 function createTodoElement(id, todo_object) {
     var todo_element = document.createElement('div');
     todo_element.innerText = todo_object.title;
     todo_element.setAttribute("data-id", id);
     todo_element.setAttribute("class", "todoStatus" +todo_object.status);
+
 
     if(todo_object.status == "ACTIVE"){
         var complete_button = document.createElement("button");
@@ -86,6 +105,13 @@ function createTodoElement(id, todo_object) {
         complete_button.setAttribute("onclick", "completeTodoAJAX(" + id +")");
         todo_element.appendChild(complete_button);
     }
+    if(todo_object.status == "ACTIVE" || todo_object.status == "COMPLETE"){
+        var delete_button = document.createElement("button");
+        delete_button.innerText = "Delete";
+        delete_button.setAttribute("onclick", "deleteTodoAJAX(" + id +")");
+        todo_element.appendChild(delete_button);
+    }
+
 
     return todo_element;
 }
