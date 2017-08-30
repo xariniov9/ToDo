@@ -4,6 +4,8 @@ const TODO_LIST_ID = "todos_list_div";
 
 console.log("works!");
 
+window.onload = getTodosAJAX();
+
 function getTodosAJAX() {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/api/todos", true);
@@ -13,7 +15,7 @@ function getTodosAJAX() {
             // IS RESPONSE OK?
             if(xhr.status == STATUS_OK){
                 console.log(xhr.response);
-                add_todo_elements(TODO_LIST_ID, xhr.response);
+                addTodoElements(TODO_LIST_ID, xhr.response);
             }
         }
     }
@@ -21,7 +23,21 @@ function getTodosAJAX() {
 
 }
 
-function add_todo_elements(id, todos_data_json){
+function addTodoElements(id, todos_data_json){
     var parent = document.getElementById(id);
-    parent.innerHTML = todos_data_json;
+    var todos = JSON.parse(todos_data_json);
+    if(parent){
+        parent.innerHTML = "";
+        Object.keys(todos).forEach( function (key) {
+            var todoElement = createTodoElement(key, todos[key]);
+            parent.appendChild(todoElement);
+        });
+    }
+}
+
+function createTodoElement(id, todo_object) {
+    var todo_element = document.createElement('div');
+    todo_element.innerText = todo_object.title;
+    todo_element.setAttribute("data-id", id);
+    return todo_element;
 }
