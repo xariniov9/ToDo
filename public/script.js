@@ -23,6 +23,28 @@ function getTodosAJAX() {
 
 }
 
+function addTodoAJAX() {
+    var title= document.getElementById("new_todo_title").value;
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/todos", true);
+
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    var data = "title=" + encodeURI(title);
+
+    xhr.onreadystatechange = function () {
+        //callback for open!
+        if(xhr.readyState == RESPONSE_DONE){    //response ready?
+            if(xhr.status == STATUS_OK){
+                //console.log(xhr.responseText);
+                addTodoElements(TODO_LIST_ID, xhr.responseText);
+            }
+        }
+    }
+    xhr.send(data);
+
+}
+
 function addTodoElements(id, todos_data_json){
     var parent = document.getElementById(id);
     var todos = JSON.parse(todos_data_json);
@@ -31,6 +53,7 @@ function addTodoElements(id, todos_data_json){
         Object.keys(todos).forEach( function (key) {
             var todoElement = createTodoElement(key, todos[key]);
             parent.appendChild(todoElement);
+            console.log(todoElement);
         });
     }
 }

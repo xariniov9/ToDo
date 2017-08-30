@@ -38,7 +38,7 @@ app.post('/api/todos', function (req, res) {
         }
         todo_db.todos[todo_db.next_todo_id] = newTodo;
         todo_db.next_todo_id++;
-        res.json(newTodo);
+        res.json(todo_db.todos);
     }
 
 });
