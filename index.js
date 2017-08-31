@@ -25,6 +25,7 @@ app.delete('/api/todos/:id', function (req, res) {
    }
 });
 
+
 app.post('/api/todos', function (req, res) {
    // expect a title in body of request
     var todo_title = req.body.title;
@@ -43,14 +44,19 @@ app.post('/api/todos', function (req, res) {
 
 });
 
+
 app.put('/api/todos/:id', function (req, res) {
     var put_id = req.params.id;
 
     var todo = todo_db.todos[put_id];
     if(!todo || todo.status == todo_db.StatusENUMS.DELETED){
         res.status(400).json({err : "Todo doesn't exist"});
-    } else {
-        todo.status = todo_db.StatusENUMS.COMPLETE;
+    } else{
+        if(todo.status == todo_db.StatusENUMS.ACTIVE)
+            todo.status = todo_db.StatusENUMS.COMPLETE;
+        else
+            todo.status = todo_db.StatusENUMS.ACTIVE;
         res.json(todo_db.todos);
     }
 });
+
