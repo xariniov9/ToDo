@@ -7,12 +7,15 @@ const TODO_LIST_ID_COMPLETE = "todos_list_div_complete";
 
 window.onload = getTodosAJAX();
 
+// given the id of html, it returns the status of object belonging to the id
 function extractStatus(status) {
     if(status.length > 15)
         return status.substr(15).toUpperCase();
     return "";
 }
 
+// adds all the items on the webpage.
+// Basically used when whole page is reloaded or refreshed.
 function getTodosAJAX() {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/api/todos", true);
@@ -28,6 +31,7 @@ function getTodosAJAX() {
     };
     xhr.send(data=null);
 }
+
 
 function addTodoElements(id, todos_data_json){
     var parent = document.getElementById(id);
@@ -53,10 +57,14 @@ function createTodoElement(id, todo_object) {
     todo_element.setAttribute("style", "border: 0 none;");
 
     if(todo_object.status == "ACTIVE" || todo_object.status == "COMPLETE"){
+        // Because we will be adding it as label
         todo_element.innerText = "";
+
+        //div containing the checkbox, title and delete icon
         var complete_box = document.createElement('div');
         complete_box.setAttribute("class", "checkbox checkbox-success");
 
+        //checkbox <input type="checkbox" class="styled" id="chk"+id onclick="completeTodoAJAX(id)">
         var chkbox = document.createElement("input");
         chkbox.setAttribute("id", "chk"+id);
         chkbox.setAttribute("class", "styled");
@@ -65,32 +73,27 @@ function createTodoElement(id, todo_object) {
         if(todo_object.status === "COMPLETE")
             chkbox.setAttribute('checked','checked');
 
+        //label for checkbox
         var lbl = document.createElement("label");
         lbl.setAttribute("for", "chk"+id);
         lbl.innerText = todo_object.title;
         if(todo_object.status === "COMPLETE")
             lbl.setAttribute("style","text-decoration: line-through;")
 
-        complete_box.appendChild(chkbox);
-        complete_box.appendChild(lbl);
 
-
-
+        //delete icon
         var delete_button = document.createElement("button");
         delete_button.setAttribute("class", "btn btn-default");
         delete_button.setAttribute("onclick", "deleteTodoAJAX(" + id +")");
         delete_button.setAttribute("style", "color:#FF0000; position: absolute; right:0; border: 0 none;")
-
         var span = document.createElement("span");
         span.setAttribute("class", "glyphicon glyphicon-trash");
-
-
         delete_button.appendChild(span);
+
+        complete_box.appendChild(chkbox);
+        complete_box.appendChild(lbl);
         complete_box.appendChild(delete_button);
-
         todo_element.appendChild(complete_box);
-
-
     }
     return todo_element;
 }
